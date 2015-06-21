@@ -1,0 +1,110 @@
+<html ng-app="counters">
+    <head>
+        <title>Counters</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <decimal-input></decimal-input>
+        </div>
+
+        <script type="text/ng-template" id="decimal-counters">
+            <form class="form-inline">
+              <label for="decimal-input">Decimal Number</label>
+              <input ng-model="ctrl.decimalNumber"
+                      type="number"
+                      id="decimal-input"
+                      class="form-control">
+              </input>
+              <button ng-click="ctrl.toggleCounting()"
+                      class="btn"
+                      ng-class="{'btn-success':!ctrl.isCounting, 'btn-warning':ctrl.isCounting }">
+                {{ctrl.isCounting ? 'Stop Counting' : 'Start Counting'}}
+              </button>
+            </form>
+
+            <counter radix="2"
+                     decimal-number="ctrl.decimalNumber">
+            </counter>
+            <counter radix="3"
+                     decimal-number="ctrl.decimalNumber">
+            </counter>
+            <counter radix="10"
+                     decimal-number="ctrl.decimalNumber">
+            </counter>
+            <counter radix="16"
+                     decimal-number="ctrl.decimalNumber">
+            </counter>
+        </script>
+
+        <script type="text/ng-template" id="counter-template">
+            <table class="table table-condensed table-fixed">
+                <thead>
+                    <tr>
+                        <th ng-repeat="digit in ctrl.digits track by $index">
+                            {{ ::ctrl.radix }} <sup>{{ ctrl.reverseIndex($index) }}</sup>
+                        </th>
+                        <th>
+                          Sum:
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td ng-repeat="digit in ctrl.digits track by $index">
+                            {{ ctrl.powerOf($index) }}
+                        </td>
+                        <td>
+                        <!-- blank column -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td ng-repeat="digit in ctrl.digits track by $index">
+                            {{ digit }}
+                        </td>
+                        <td>
+                        <!-- blank column -->
+                        </td>
+                    </tr>
+                    <tr class="count-power">
+                        <td ng-repeat="digit in ctrl.digits track by $index"
+                            ng-class="{'last-digit':$last}">
+                            {{ ctrl.digitTimesPower(digit, $index) }}
+                        </td>
+                        <td>
+                          {{ ctrl.decimalNumber }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="clear-fix"></div>
+        </script>
+        <script src="app.js"></script>
+        <style>
+            .table td {
+                width: 120px;
+            }
+            table.table-fixed {
+              width: auto;
+            }
+            counter > table {
+              margin-left: auto;
+            }
+            #decimal-input {
+              width: 120px;
+            }
+            tr.count-power > td::after {
+              content: '+';
+              text-align: right;
+            }
+            tr.count-power > td:last-child::after {
+              content: none;
+              text-align: right;
+            }
+            tr.count-power > td.last-digit::after {
+              content: '=';
+            }
+        </style>
+    </body>
+</html>
